@@ -1,12 +1,3 @@
-require("dotenv").config();
-
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
 function requireEnv(name) {
   const value = process.env[name];
   if (!value || value.trim() === "") {
@@ -28,15 +19,13 @@ function buildUserId(fullName, dob) {
   return `${normalizedName}_${dob}`;
 }
 
-const USER_DETAILS = {
-  user_id: buildUserId(requireEnv("FULL_NAME"), requireEnv("DOB_DDMMYYYY")),
-  email_id: requireEnv("EMAIL_ID"),
-  college_roll_number: requireEnv("COLLEGE_ROLL_NUMBER")
-};
-
-app.use(cors());
-app.use(express.json({ limit: "1mb" }));
-app.use(express.static(path.join(__dirname, "public")));
+function getUserDetails() {
+  return {
+    user_id: buildUserId(requireEnv("FULL_NAME"), requireEnv("DOB_DDMMYYYY")),
+    email_id: requireEnv("EMAIL_ID"),
+    college_roll_number: requireEnv("COLLEGE_ROLL_NUMBER")
+  };
+}
 
 function isValidEdge(entry) {
   return /^[A-Z]->[A-Z]$/.test(entry) && entry[0] !== entry[3];
@@ -62,7 +51,7 @@ function computeDepth(node, childrenMap) {
 }
 
 function hasDirectedCycle(nodes, childrenMap) {
-  const state = new Map(); // 0 unvisited, 1 visiting, 2 visited
+  const state = new Map();
 
   function dfs(node) {
     state.set(node, 1);
@@ -88,13 +77,15 @@ function connectedComponents(nodes, undirectedMap) {
 
   for (const node of nodes) {
     if (seen.has(node)) continue;
+
     const stack = [node];
-    const comp = [];
+    const component = [];
     seen.add(node);
 
     while (stack.length > 0) {
       const current = stack.pop();
-      comp.push(current);
+      component.push(current);
+
       const neighbors = undirectedMap.get(current) || [];
       for (const next of neighbors) {
         if (!seen.has(next)) {
@@ -104,8 +95,8 @@ function connectedComponents(nodes, undirectedMap) {
       }
     }
 
-    comp.sort();
-    components.push(comp);
+    component.sort();
+    components.push(component);
   }
 
   components.sort((a, b) => a[0].localeCompare(b[0]));
@@ -182,6 +173,7 @@ function processHierarchy(data) {
 
   const components = connectedComponents(Array.from(allNodes).sort(), undirectedAsArrays);
   const hierarchies = [];
+
   let total_trees = 0;
   let total_cycles = 0;
   let largest_tree_root = "";
@@ -190,6 +182,7 @@ function processHierarchy(data) {
   for (const componentNodes of components) {
     const componentSet = new Set(componentNodes);
     const compChildrenMap = new Map();
+
     for (const node of componentNodes) {
       const children = (childrenMap.get(node) || []).filter((c) => componentSet.has(c)).sort();
       compChildrenMap.set(node, children);
@@ -230,7 +223,7 @@ function processHierarchy(data) {
   }
 
   return {
-    ...USER_DETAILS,
+    ...getUserDetails(),
     hierarchies,
     invalid_entries,
     duplicate_edges,
@@ -242,26 +235,24 @@ function processHierarchy(data) {
   };
 }
 
-app.post("/bfhl", (req, res) => {
-  const { data } = req.body || {};
-
-  if (!Array.isArray(data)) {
-    return res.status(400).json({
-      error: "Invalid input. Expected JSON: {\"data\": [\"A->B\", \"A->C\"]}"
-    });
+module.exports = (req, res) => {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  return res.json(processHierarchy(data));
-});
+  try {
+    const { data } = req.body || {};
+    if (!Array.isArray(data)) {
+      return res.status(400).json({
+        error: "Invalid input. Expected JSON: {\"data\": [\"A->B\", \"A->C\"]}"
+      });
+    }
 
-app.get("/health", (_req, res) => {
-  res.json({ status: "ok" });
-});
-
-app.get("*", (_req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+    return res.status(200).json(processHierarchy(data));
+  } catch (error) {
+    return res.status(500).json({
+      error: error.message || "Unexpected server error"
+    });
+  }
+};

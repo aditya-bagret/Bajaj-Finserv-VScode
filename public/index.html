@@ -3,37 +3,85 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SRM Full Stack Challenge</title>
+    <title>BFHL Hierarchy Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main class="container">
-      <section class="card">
-        <h1>SRM Full Stack Engineering Challenge</h1>
-        <p class="subtitle">Hierarchy API Tester (`POST /bfhl`)</p>
+    <main class="page-wrap">
+      <header class="page-header">
+        <div>
+          <h1>BFHL Hierarchy Analyzer</h1>
+          <p class="subtitle">Tree and cycle detection engine</p>
+          <p class="pill" id="edgesProcessedBadge">Edges processed: 0</p>
+        </div>
+        <button id="themeToggle" type="button" class="btn btn-ghost">Dark</button>
+      </header>
 
-        <label for="apiUrl">API Base URL</label>
-        <input id="apiUrl" type="text" placeholder="https://your-api-domain.com" />
-
-        <label for="nodesInput">Node entries (comma or newline separated)</label>
-        <textarea
-          id="nodesInput"
-          rows="8"
-          placeholder="A->B, A->C, B->D"
-        >A->B
-A->C
-B->D</textarea>
-
-        <button id="submitBtn" type="button">Submit</button>
+      <section class="panel input-panel">
+        <h2>Edge Input</h2>
+        <textarea id="nodesInput" rows="12" spellcheck="false"></textarea>
+        <div class="input-meta">
+          <p class="counts" id="liveCounts">0 valid x 0 invalid</p>
+          <p class="entry-count" id="entryCount">0 edges entered</p>
+        </div>
+        <div class="actions-row">
+          <button id="submitBtn" type="button" class="btn btn-primary">Submit</button>
+          <button id="loadBtn" type="button" class="btn btn-ghost">Load Example</button>
+          <button id="clearBtn" type="button" class="btn btn-ghost">Clear</button>
+        </div>
+        <p class="kbd-hint">Ctrl+Enter to submit</p>
         <p id="status" class="status"></p>
       </section>
 
-      <section class="card">
-        <h2>API Response</h2>
-        <pre id="output">{}</pre>
+      <section id="resultsSection" class="results-section hidden">
+        <div class="stats-grid">
+          <article class="stat-card">
+            <p class="stat-icon">T</p>
+            <p class="stat-value" id="totalTrees">0</p>
+            <p class="stat-label">Total trees</p>
+          </article>
+          <article class="stat-card">
+            <p class="stat-icon">C</p>
+            <p class="stat-value" id="totalCycles">0</p>
+            <p class="stat-label">Total cycles</p>
+          </article>
+          <article class="stat-card">
+            <p class="stat-icon">R</p>
+            <p class="stat-value" id="deepestRoot">-</p>
+            <p class="stat-label">Deepest tree</p>
+          </article>
+        </div>
+
+        <div class="meta-block">
+          <h3>Invalid Entries</h3>
+          <div id="invalidEntries" class="chip-row"></div>
+          <h3>Duplicate Edges</h3>
+          <div id="duplicateEdges" class="chip-row"></div>
+        </div>
+
+        <section class="panel response-panel">
+          <div class="response-toolbar">
+            <div class="tabs" role="tablist" aria-label="Response view">
+              <button id="asciiTab" class="tab active" type="button" data-tab="ascii">ASCII</button>
+              <button id="jsonTab" class="tab" type="button" data-tab="json">JSON</button>
+            </div>
+            <div class="toolbar-actions">
+              <button id="copyBtn" type="button" class="btn btn-ghost">Copy Response</button>
+              <button id="exportBtn" type="button" class="btn btn-ghost">Export JSON</button>
+            </div>
+          </div>
+          <pre id="asciiOutput" class="output-block"></pre>
+          <pre id="jsonOutput" class="output-block hidden"></pre>
+        </section>
       </section>
     </main>
 
     <script src="./app.js"></script>
   </body>
-  </html>
+</html>

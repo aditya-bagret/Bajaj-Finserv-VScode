@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "SRM Full Stack Engineering Challenge solution",
   "main": "server.js",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"
@@ -17,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2"
   }
 }
