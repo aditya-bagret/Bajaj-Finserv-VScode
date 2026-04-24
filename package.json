@@ -1,0 +1,22 @@
+{
+  "name": "srm-fullstack-engineering-challenge",
+  "version": "1.0.0",
+  "description": "SRM Full Stack Engineering Challenge solution",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "srm",
+    "challenge",
+    "nodejs",
+    "express"
+  ],
+  "author": "Aditya Sharma",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

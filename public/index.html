@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SRM Full Stack Challenge</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <section class="card">
+        <h1>SRM Full Stack Engineering Challenge</h1>
+        <p class="subtitle">Hierarchy API Tester (`POST /bfhl`)</p>
+
+        <label for="apiUrl">API Base URL</label>
+        <input id="apiUrl" type="text" placeholder="https://your-api-domain.com" />
+
+        <label for="nodesInput">Node entries (comma or newline separated)</label>
+        <textarea
+          id="nodesInput"
+          rows="8"
+          placeholder="A->B, A->C, B->D"
+        >A->B
+A->C
+B->D</textarea>
+
+        <button id="submitBtn" type="button">Submit</button>
+        <p id="status" class="status"></p>
+      </section>
+
+      <section class="card">
+        <h2>API Response</h2>
+        <pre id="output">{}</pre>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+  </html>
