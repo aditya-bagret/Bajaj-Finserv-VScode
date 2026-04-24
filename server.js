@@ -6,9 +6,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const USER_DETAILS = {
-  user_id: "adityasharma_11032004",
-  email_id: "adityasharma4work@gmail.com",
-  college_roll_number: "RA2311027010147"
+  user_id: "parigupta_04052003",
+  email_id: "as6333@srmist.edu.in",
+  college_roll_number: "RA231102701073"
 };
 
 app.use(cors());
