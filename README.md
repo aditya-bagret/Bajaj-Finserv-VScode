@@ -31,8 +31,8 @@ npm start
 
 ### Required Environment Variables
 
-- `FULL_NAME` (example: `Aditya Sharma`)
-- `DOB_DDMMYYYY` (example: `11032004`)
+- `FULL_NAME` (example: `Pari Gupta`)
+- `DOB_DDMMYYYY` (example: `04052003`)
 - `EMAIL_ID`
 - `COLLEGE_ROLL_NUMBER`
 - `PORT` (optional, defaults to `3000`)

@@ -16,7 +16,7 @@
     "nodejs",
     "express"
   ],
-  "author": "Aditya Sharma",
+  "author": "Pari Gupta",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
