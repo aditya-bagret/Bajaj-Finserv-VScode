@@ -236,8 +236,22 @@ function processHierarchy(data) {
 }
 
 module.exports = (req, res) => {
+  if (req.method === "OPTIONS") {
+    res.setHeader("Allow", "GET, POST, OPTIONS");
+    return res.status(204).end();
+  }
+
+  if (req.method === "GET") {
+    return res.status(200).json({
+      success: true,
+      message: "BFHL endpoint is live. Use POST /bfhl with JSON body {\"data\": [\"A->B\", \"A->C\"]}.",
+      endpoint: "/bfhl",
+      method: "POST"
+    });
+  }
+
   if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
+    res.setHeader("Allow", "GET, POST, OPTIONS");
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
